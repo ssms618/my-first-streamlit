@@ -1,5 +1,6 @@
 import streamlit as st
 import yfinance as yf
+import pandas as pd  # ← 【追加】データ成形用のお助けツール
 from ta.trend import EMAIndicator, ADXIndicator
 import plotly.graph_objects as go
 
@@ -18,7 +19,11 @@ adx_period = st.sidebar.number_input("ADXの期間", value=14)
 df = yf.download(symbol, period="5d", interval=interval)
 
 if not df.empty:
-    # --- インジケーターの計算 (安定版の 'ta' ライブラリを使用) ---
+    # 【追加】yfinanceの最新仕様に合わせて、データを「2次元」から「1次元」に平坦化する
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.droplevel(1)
+
+    # --- インジケーターの計算 ---
     ema_col = f"EMA_{ema_period}"
     adx_col = f"ADX_{adx_period}"
     
