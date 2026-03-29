@@ -1,5 +1,4 @@
 streamlit
 yfinance
-numpy<2.0.0
-pandas-ta
+ta
 plotly
